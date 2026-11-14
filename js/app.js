@@ -80,20 +80,26 @@ class StorageManager {
 
   static async fetchFromJSONFile() {
     try {
-      const response = await fetch('partidas.json');
+      // Usar cache-busting con timestamp para que siempre cargue la versión más reciente al editar partidas.json
+      const cacheBuster = `?_t=${Date.now()}`;
+      const response = await fetch(`partidas.json${cacheBuster}`, { cache: 'no-cache' });
       if (response.ok) {
-        const data = await response.json();
-        if (data && Array.isArray(data.matches) && data.matches.length > 0) {
-          // Solo sobrescribir si no había datos en localStorage o para sincronizar
+        const serverData = await response.json();
+        if (serverData && Array.isArray(serverData.matches) && serverData.matches.length > 0) {
           const current = this.loadData();
-          if (!current.matches || current.matches.length === 0) {
-            this.saveData(data);
+          const serverIds = new Set(serverData.matches.map(m => m.id));
+          // Preservar partidas agregadas localmente desde el navegador que aún no están en el servidor
+          const localOnly = (current.matches || []).filter(m => m.id && !serverIds.has(m.id));
+
+          if (localOnly.length > 0) {
+            serverData.matches = [...localOnly, ...serverData.matches];
           }
-          return data;
+          this.saveData(serverData);
+          return serverData;
         }
       }
     } catch (err) {
-      console.info('Acceso directo a partidas.json mediante fetch no disponible en file://. Usando almacenamiento sincronizado.');
+      console.info('Carga de partidas.json vía red no disponible (ej. file://). Usando almacenamiento local.');
     }
     return this.loadData();
   }

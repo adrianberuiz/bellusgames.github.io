@@ -316,7 +316,7 @@ class CatanGame {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
           <button type="button" 
-                  class="btn-tactile toggle-longest-road flex items-center justify-between p-2.5 rounded-xl border transition ${player.longestRoad ? 'bg-amber-600/30 border-amber-500 text-amber-200' : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:border-slate-600'}"
+                  class="toggle-longest-road flex items-center justify-between p-2.5 rounded-xl border transition ${player.longestRoad ? 'bg-amber-600/30 border-amber-500 text-amber-200' : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:border-slate-600'}"
                   data-active="${player.longestRoad ? 'true' : 'false'}">
             <div class="flex items-center gap-2">
               <img src="assets/catan_longest_road.jpg" alt="Ruta" class="w-5 h-5 rounded-full object-cover shadow-sm" onerror="this.style.display='none'">
@@ -326,7 +326,7 @@ class CatanGame {
           </button>
 
           <button type="button" 
-                  class="btn-tactile toggle-largest-army flex items-center justify-between p-2.5 rounded-xl border transition ${player.largestArmy ? 'bg-red-600/30 border-red-500 text-red-200' : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:border-slate-600'}"
+                  class="toggle-largest-army flex items-center justify-between p-2.5 rounded-xl border transition ${player.largestArmy ? 'bg-red-600/30 border-red-500 text-red-200' : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:border-slate-600'}"
                   data-active="${player.largestArmy ? 'true' : 'false'}">
             <div class="flex items-center gap-2">
               <img src="assets/catan_largest_army.jpg" alt="Ejército" class="w-5 h-5 rounded-full object-cover shadow-sm" onerror="this.style.display='none'">
@@ -769,11 +769,11 @@ class App {
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
       const active = btn.dataset.tab === tabName;
       if (active) {
-        btn.classList.add('btn-game-amber');
-        btn.classList.remove('btn-game-tab-inactive');
+        btn.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'text-white', 'shadow-md', 'shadow-amber-500/20');
+        btn.classList.remove('text-slate-400');
       } else {
-        btn.classList.remove('btn-game-amber');
-        btn.classList.add('btn-game-tab-inactive');
+        btn.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'text-white', 'shadow-md', 'shadow-amber-500/20');
+        btn.classList.add('text-slate-400');
       }
     });
 
@@ -794,11 +794,14 @@ class App {
     document.querySelectorAll('.game-filter-btn').forEach(btn => {
       const active = btn.dataset.filter === filter;
       if (active) {
-        btn.classList.add('btn-game-amber');
-        btn.classList.remove('btn-game-tab-inactive');
+        btn.classList.add('active');
+        if (filter === 'all') {
+          btn.classList.add('capsule-tab-gold');
+        } else {
+          btn.classList.remove('capsule-tab-gold');
+        }
       } else {
-        btn.classList.remove('btn-game-amber');
-        btn.classList.add('btn-game-tab-inactive');
+        btn.classList.remove('active', 'capsule-tab-gold');
       }
     });
     this.renderCurrentView();
@@ -912,117 +915,78 @@ class App {
     this.renderKPIs(matches, playerList);
     this.renderPodium(playerList.slice(0, 3));
 
-    const rosterContainer = document.getElementById('leaderboard-roster-container');
-    if (rosterContainer) {
-      if (playerList.length === 0) {
-        rosterContainer.innerHTML = `
-          <div class="game-panel p-8 text-center text-slate-300">
-            <span class="text-4xl block mb-2">🎲</span>
-            <p class="font-game text-lg text-yellow-300">¡Aún no hay partidas jugadas!</p>
-            <p class="text-xs text-slate-400 mt-1">Registra tu primera partida para ver a los héroes aquí.</p>
-          </div>
-        `;
-      } else {
-        const avatarColors = [
-          '#f59e0b', '#38bdf8', '#ea580c', '#a855f7', '#06b6d4', 
-          '#f97316', '#eab308', '#10b981', '#ec4899', '#6366f1'
-        ];
-        
-        rosterContainer.innerHTML = playerList.map((p, idx) => {
-          const rank = idx + 1;
-          const winrate = p.gamesPlayed > 0 ? Math.round((p.wins / p.gamesPlayed) * 100) : 0;
-          const avatarColor = avatarColors[idx % avatarColors.length];
-          
-          let titleBadge = 'Aventurero del Salón';
-          let shieldColor = '#f59e0b';
-          if (p.catanWins > p.sevenWondersWins && p.catanWins > 0) {
-            titleBadge = '👑 Señor de Catán';
-            shieldColor = '#ea580c';
-          } else if (p.sevenWondersWins > p.catanWins && p.sevenWondersWins > 0) {
-            titleBadge = '🏛️ Arquitecto de Maravillas';
-            shieldColor = '#10b981';
-          } else if (p.wins >= 3) {
-            titleBadge = '⚔️ Gran Campeón';
-            shieldColor = '#facc15';
-          }
-
-          let rankBadgeHTML = '';
-          if (rank === 1) {
-            rankBadgeHTML = `<div class="game-medal-badge game-medal-badge-1 !static !w-8 !h-8 !text-xs">1</div>`;
-          } else if (rank === 2) {
-            rankBadgeHTML = `<div class="game-medal-badge game-medal-badge-2 !static !w-8 !h-8 !text-xs">2</div>`;
-          } else if (rank === 3) {
-            rankBadgeHTML = `<div class="game-medal-badge game-medal-badge-3 !static !w-8 !h-8 !text-xs">3</div>`;
-          } else {
-            rankBadgeHTML = `<span class="game-rank-num">${rank}</span>`;
-          }
-
-          return `
-            <div class="game-roster-card cursor-pointer" onclick="window.app.switchTab('players')">
-              <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <!-- Número de Posición o Medalla -->
-                <div class="flex-shrink-0 w-9 flex items-center justify-center">
-                  ${rankBadgeHTML}
-                </div>
-
-                <!-- Marco de Avatar (Image 1) -->
-                <div class="relative flex-shrink-0">
-                  <div class="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl flex items-center justify-center font-game text-white text-base sm:text-lg shadow-md border-3" style="background: linear-gradient(135deg, ${avatarColor}, #0f172a); border-color: ${avatarColor};">
-                    ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
-                  </div>
-                  <!-- Escudo de Jugador (Image 1) -->
-                  <div class="absolute -bottom-1 -right-1 game-shield-icon" style="background: ${shieldColor};" title="${titleBadge}">
-                    ★
-                  </div>
-                </div>
-
-                <!-- Nombre y Datos -->
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="font-heading font-black text-slate-900 text-base sm:text-lg leading-tight truncate">
-                      ${escapeHTML(p.name)}
-                    </h4>
-                    <span class="text-[10px] font-game px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
-                      ${winrate}% WR
-                    </span>
-                  </div>
-                  <p class="text-xs font-semibold text-slate-600 truncate mt-0.5">
-                    ${titleBadge} • <span class="text-slate-800 font-bold">${p.gamesPlayed} partidas</span>
-                    ${p.highScore > 0 ? `• Récord: <span class="text-emerald-700 font-black">${p.highScore} pts</span>` : ''}
-                  </p>
-                </div>
-              </div>
-
-              <!-- Caja de Puntuación (Score en Image 1) -->
-              <div class="game-score-box flex-shrink-0 pl-2">
-                <span class="game-score-label">Victorias</span>
-                <div class="flex items-baseline gap-1">
-                  <span class="game-score-val text-amber-950">${p.wins}</span>
-                  <span class="font-game text-xs text-amber-700">W</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
     const tableBody = document.getElementById('leaderboard-table-body');
     if (tableBody) {
       if (playerList.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Sin partidas</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" class="py-12 text-center text-slate-500 font-medium">Aún no hay partidas registradas en esta categoría.</td></tr>`;
       } else {
+        const avatarGradients = [
+          'from-amber-500 to-rose-500',
+          'from-sky-500 to-indigo-500',
+          'from-emerald-500 to-teal-500',
+          'from-purple-500 to-pink-500',
+          'from-orange-500 to-amber-500'
+        ];
+
         tableBody.innerHTML = playerList.map((p, idx) => {
+          const rank = idx + 1;
           const winrate = p.gamesPlayed > 0 ? Math.round((p.wins / p.gamesPlayed) * 100) : 0;
+          const grad = avatarGradients[idx % avatarGradients.length];
+
+          let placeBadge = '';
+          if (rank === 1) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 font-black text-xs border border-amber-500/30">🥇 1</span>`;
+          } else if (rank === 2) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-500/10 text-slate-300 font-black text-xs border border-slate-500/30">🥈 2</span>`;
+          } else if (rank === 3) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-orange-500/10 text-orange-400 font-black text-xs border border-orange-500/30">🥉 3</span>`;
+          } else {
+            placeBadge = `<span class="text-xs font-bold text-slate-500">#${rank}</span>`;
+          }
+
+          let titleTag = '';
+          if (p.catanWins > p.sevenWondersWins && p.catanWins > 0) {
+            titleTag = `<span class="text-[10px] text-amber-400 font-semibold">🏝️ Señor de Catán</span>`;
+          } else if (p.sevenWondersWins > p.catanWins && p.sevenWondersWins > 0) {
+            titleTag = `<span class="text-[10px] text-emerald-400 font-semibold">🏛️ Arquitecto</span>`;
+          } else if (p.wins >= 3) {
+            titleTag = `<span class="text-[10px] text-purple-400 font-semibold">👑 Gran Campeón</span>`;
+          }
+
           return `
-            <tr class="border-b border-slate-800/60 hover:bg-slate-800/40">
-              <td class="py-2.5 px-3 text-center font-bold text-amber-400">#${idx + 1}</td>
-              <td class="py-2.5 px-3 font-bold text-white">${escapeHTML(p.name)}</td>
-              <td class="py-2.5 px-3 text-center text-slate-300">${p.gamesPlayed}</td>
-              <td class="py-2.5 px-3 text-center font-bold text-amber-400">${p.wins}</td>
-              <td class="py-2.5 px-3 text-center">${winrate}%</td>
-              <td class="py-2.5 px-3 text-center text-slate-300">${p.gamesPlayed > 0 ? (p.totalPoints/p.gamesPlayed).toFixed(1) : 0}</td>
-              <td class="py-2.5 px-3 text-center font-bold text-emerald-400">${p.highScore}</td>
+            <tr class="hover:bg-white/[0.02] transition cursor-pointer" onclick="window.app.switchTab('players')">
+              <td class="text-center">${placeBadge}</td>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-gradient-to-tr ${grad} flex items-center justify-center font-bold text-white text-xs shadow-sm">
+                    ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
+                  </div>
+                  <div>
+                    <div class="font-heading font-bold text-white text-sm">@${escapeHTML(p.name.toLowerCase().replace(/\s+/g, ''))}</div>
+                    ${titleTag}
+                  </div>
+                </div>
+              </td>
+              <td class="text-center font-medium text-slate-400">${p.gamesPlayed}</td>
+              <td class="text-center">
+                <div class="inline-flex items-center gap-1.5 font-heading font-extrabold text-white text-sm">
+                  <span class="text-amber-400">🪙</span>
+                  <span>${p.wins}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full ${winrate >= 50 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400'}">
+                  ${winrate}%
+                </span>
+              </td>
+              <td class="text-center font-medium text-slate-300">
+                ${p.gamesPlayed > 0 ? (p.totalPoints / p.gamesPlayed).toFixed(1) : 0}
+              </td>
+              <td class="text-right">
+                <span class="badge-reward">
+                  +${p.highScore} pts
+                </span>
+              </td>
             </tr>
           `;
         }).join('');
@@ -1076,107 +1040,122 @@ class App {
     const second = top3[1];
     const third = top3[2];
 
-    const formatPodiumCard = (p, rank) => {
+    const getCrownSVG = (rank) => {
+      if (rank === 1) {
+        return `
+          <svg class="crown-icon crown-gold" viewBox="0 0 48 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 32h40v4H4z" fill="#D97706"/>
+            <path d="M6 30h36v2H6z" fill="#F59E0B"/>
+            <path d="M4 30L8 12l8 10 8-16 8 16 8-10 4 18H4z" fill="url(#crown-gold-grad)"/>
+            <circle cx="24" cy="6" r="3" fill="#FDE047"/>
+            <circle cx="8" cy="12" r="2.5" fill="#FDE047"/>
+            <circle cx="40" cy="12" r="2.5" fill="#FDE047"/>
+            <circle cx="24" cy="22" r="4.5" fill="#EC4899"/>
+            <circle cx="24" cy="22" r="2.5" fill="#F43F5E"/>
+            <defs>
+              <linearGradient id="crown-gold-grad" x1="4" y1="6" x2="44" y2="30" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FDE047"/>
+                <stop offset="0.5" stop-color="#F59E0B"/>
+                <stop offset="1" stop-color="#B45309"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        `;
+      } else if (rank === 2) {
+        return `
+          <svg class="crown-icon" viewBox="0 0 48 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 32h40v4H4z" fill="#475569"/>
+            <path d="M6 30h36v2H6z" fill="#94A3B8"/>
+            <path d="M4 30L8 12l8 10 8-16 8 16 8-10 4 18H4z" fill="url(#crown-silver-grad)"/>
+            <circle cx="24" cy="6" r="3" fill="#F1F5F9"/>
+            <circle cx="8" cy="12" r="2.5" fill="#CBD5E1"/>
+            <circle cx="40" cy="12" r="2.5" fill="#CBD5E1"/>
+            <circle cx="24" cy="22" r="4.5" fill="#10B981"/>
+            <circle cx="24" cy="22" r="2.5" fill="#34D399"/>
+            <defs>
+              <linearGradient id="crown-silver-grad" x1="4" y1="6" x2="44" y2="30" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FFFFFF"/>
+                <stop offset="0.5" stop-color="#CBD5E1"/>
+                <stop offset="1" stop-color="#64748B"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        `;
+      } else {
+        return `
+          <svg class="crown-icon" viewBox="0 0 48 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 32h40v4H4z" fill="#78350F"/>
+            <path d="M6 30h36v2H6z" fill="#D97706"/>
+            <path d="M4 30L8 12l8 10 8-16 8 16 8-10 4 18H4z" fill="url(#crown-bronze-grad)"/>
+            <circle cx="24" cy="6" r="3" fill="#FDBA74"/>
+            <circle cx="8" cy="12" r="2.5" fill="#FB923C"/>
+            <circle cx="40" cy="12" r="2.5" fill="#FB923C"/>
+            <circle cx="24" cy="22" r="4.5" fill="#F59E0B"/>
+            <circle cx="24" cy="22" r="2.5" fill="#FBBF24"/>
+            <defs>
+              <linearGradient id="crown-bronze-grad" x1="4" y1="6" x2="44" y2="30" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FED7AA"/>
+                <stop offset="0.5" stop-color="#EA580C"/>
+                <stop offset="1" stop-color="#9A3412"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        `;
+      }
+    };
+
+    const renderColumn = (p, rank) => {
       if (!p) {
         return `
-          <div class="podium-card podium-card-${rank} opacity-40 justify-center items-center">
-            <span class="text-3xl text-slate-400">❓</span>
-            <span class="text-xs font-bold text-slate-400 mt-2">Vacante</span>
-            <div class="game-medal-badge game-medal-badge-${rank}">${rank}</div>
+          <div class="podium-column podium-column-${rank} opacity-40">
+            <div class="podium-user-anchor">
+              <div class="avatar-ring">
+                <div class="avatar-inner">?</div>
+              </div>
+              <div class="user-handle text-slate-500">Vacante</div>
+            </div>
+            <div class="podium-block podium-block-${rank}">
+              <span class="podium-label-embossed">${rank === 1 ? '1st' : rank === 2 ? '2nd' : '3rd'}</span>
+            </div>
           </div>
         `;
       }
 
-      const winrate = p.gamesPlayed > 0 ? Math.round((p.wins / p.gamesPlayed) * 100) : 0;
-      let centerGraphic = '';
-      let crownHTML = '';
-      let shieldBg = '#facc15';
-      let title = 'Aventurero';
-      let rankColor = 'text-amber-950';
-      let subColor = 'text-amber-900';
-      let avatarBg = 'linear-gradient(135deg, #fef08a, #eab308)';
-
-      if (rank === 1) {
-        crownHTML = `<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-3xl filter drop-shadow animate-bounce">👑</div>`;
-        centerGraphic = `
-          <div class="my-1 sm:my-2 relative flex items-center justify-center">
-            <img src="assets/golden_chest.jpg" alt="Cofre Dorado" class="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-2xl drop-shadow-xl animate-float" onerror="this.onerror=null; this.src='assets/medal_gold.jpg'">
-          </div>
-        `;
-        shieldBg = '#a3e635';
-        title = 'Gran Campeón';
-        rankColor = 'text-amber-950';
-        subColor = 'text-amber-900';
-        avatarBg = 'linear-gradient(135deg, #fef08a, #ca8a04)';
-      } else if (rank === 2) {
-        centerGraphic = `
-          <div class="my-1 sm:my-2 relative flex items-center justify-center">
-            <img src="assets/medal_silver.jpg" alt="Medalla de Plata" class="w-14 h-14 sm:w-16 sm:h-16 object-contain rounded-2xl drop-shadow-lg" onerror="this.onerror=null; this.src='assets/catan_emblem.jpg'">
-          </div>
-        `;
-        shieldBg = '#38bdf8';
-        title = 'Subcampeón';
-        rankColor = 'text-sky-950';
-        subColor = 'text-sky-900';
-        avatarBg = 'linear-gradient(135deg, #f0f9ff, #0284c7)';
-      } else {
-        centerGraphic = `
-          <div class="my-1 sm:my-2 relative flex items-center justify-center">
-            <img src="assets/medal_bronze.jpg" alt="Medalla de Bronce" class="w-14 h-14 sm:w-16 sm:h-16 object-contain rounded-2xl drop-shadow-lg" onerror="this.onerror=null; this.src='assets/wonders_emblem.jpg'">
-          </div>
-        `;
-        shieldBg = '#ea580c';
-        title = '3er Puesto';
-        rankColor = 'text-orange-950';
-        subColor = 'text-orange-900';
-        avatarBg = 'linear-gradient(135deg, #fff7ed, #c2410c)';
-      }
+      const crown = getCrownSVG(rank);
+      const score = p.wins;
+      const handle = `@${escapeHTML(p.name.toLowerCase().replace(/\s+/g, ''))}`;
 
       return `
-        <div class="podium-card podium-card-${rank} cursor-pointer group" onclick="window.app.switchTab('players')">
-          ${crownHTML}
-          
-          <!-- Avatar con marco y escudo (Image 1) -->
-          <div class="relative mb-1">
-            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-3 flex items-center justify-center font-game text-lg sm:text-xl shadow-md" style="background: ${avatarBg}; border-color: ${shieldBg}; color: #0f172a;">
-              ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
+        <div class="podium-column podium-column-${rank} cursor-pointer" onclick="window.app.switchTab('players')">
+          <div class="podium-user-anchor">
+            ${crown}
+            <div class="avatar-ring avatar-ring-${rank}">
+              <div class="avatar-inner">
+                ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
+              </div>
+              <span class="avatar-level-badge">#${rank}</span>
             </div>
-            <div class="absolute -bottom-1 -right-1 game-shield-icon" style="background: ${shieldBg};">
-              ★
+            <div class="user-handle">${handle}</div>
+            <div class="score-pill ${rank === 1 ? 'score-pill-gold' : ''}">
+              <span class="text-amber-400">🪙</span>
+              <span>${score} W</span>
             </div>
           </div>
-
-          <!-- Nombre y Subtítulo -->
-          <h3 class="font-heading font-black text-sm sm:text-base ${rankColor} text-center leading-tight truncate w-full px-1">
-            ${escapeHTML(p.name)}
-          </h3>
-          <span class="text-[9px] sm:text-[10px] font-bold ${subColor} opacity-90 truncate max-w-full">
-            ${title} • ${winrate}% WR
-          </span>
-
-          <!-- Gráfico Central (Cofre o Medalla) -->
-          ${centerGraphic}
-
-          <!-- Score Box (Image 1) -->
-          <div class="bg-black/15 backdrop-blur-sm rounded-xl px-2.5 py-1 flex items-center justify-center gap-1 mt-auto">
-            <span class="font-game text-[10px] sm:text-xs uppercase tracking-wider ${subColor}">Score:</span>
-            <span class="font-game text-base sm:text-lg font-black ${rankColor}">${p.wins}</span>
-            <span class="font-game text-[9px] ${subColor}">W</span>
-          </div>
-
-          <!-- Medalla Circular en el pie (Image 1) -->
-          <div class="game-medal-badge game-medal-badge-${rank}">
-            ${rank}
+          <div class="podium-block podium-block-${rank}">
+            <span class="podium-label-embossed">${rank === 1 ? '1st' : rank === 2 ? '2nd' : '3rd'}</span>
           </div>
         </div>
       `;
     };
 
     podiumContainer.innerHTML = `
-      <div class="podium-game-container max-w-3xl mx-auto">
-        ${formatPodiumCard(second, 2)}
-        ${formatPodiumCard(first, 1)}
-        ${formatPodiumCard(third, 3)}
+      <div class="podium-section">
+        <div class="podium-spotlight"></div>
+        <div class="podium-stage">
+          ${renderColumn(second, 2)}
+          ${renderColumn(first, 1)}
+          ${renderColumn(third, 3)}
+        </div>
       </div>
     `;
   }
@@ -1232,38 +1211,36 @@ class App {
       const gameEmblemSrc = isCatan ? 'assets/catan_emblem.jpg' : 'assets/wonders_emblem.jpg';
 
       return `
-        <div class="game-battle-card ${isCatan ? 'game-card-catan' : 'game-card-wonders'} p-5 shadow-xl relative overflow-hidden group">
-          <div class="absolute top-0 left-0 right-0 h-1.5 ${isCatan ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600' : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600'}"></div>
-
+        <div class="clean-card p-5 relative overflow-hidden group">
           <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
             <div class="flex items-start gap-3">
-              <img src="${gameEmblemSrc}" alt="${isCatan ? 'Catán' : '7 Wonders'}" class="game-emblem-img mt-0.5" onerror="this.style.display='none'">
+              <img src="${gameEmblemSrc}" alt="${isCatan ? 'Catán' : '7 Wonders'}" class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow-md mt-0.5" onerror="this.style.display='none'">
               <div>
                 <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-game uppercase tracking-wider ${isCatan ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'}">
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${isCatan ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'}">
                     ${isCatan ? 'Catán' : '7 Wonders'}
                   </span>
                   <span class="text-xs text-slate-400 font-medium">📅 ${match.date || 'Sin fecha'}</span>
-                  <span class="text-xs text-slate-500">•</span>
+                  <span class="text-xs text-slate-600">•</span>
                   <span class="text-xs text-slate-400 font-medium">${escapeHTML(match.expansion || match.edition || 'Estándar')}</span>
                 </div>
-                <h3 class="text-lg font-heading font-black text-white group-hover:text-amber-300 transition">
+                <h3 class="text-base sm:text-lg font-heading font-extrabold text-white group-hover:text-amber-300 transition">
                   ${escapeHTML(match.title || 'Partida sin título')}
                 </h3>
-                ${match.notes ? `<p class="text-xs text-slate-400 italic mt-1">${escapeHTML(match.notes)}</p>` : ''}
+                ${match.notes ? `<p class="text-xs text-slate-400 italic mt-0.5">${escapeHTML(match.notes)}</p>` : ''}
               </div>
             </div>
 
             ${winner ? `
-              <div class="bg-amber-500/10 border-2 border-amber-400/60 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-lg">
-                <img src="assets/medal_gold.jpg" alt="Ganador" class="w-9 h-9 rounded-full object-cover border-2 border-amber-400 shadow" onerror="this.onerror=null; this.src='assets/medal_gold.jpg'">
+              <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl px-3.5 py-2 flex items-center gap-3 shadow-md">
+                <span class="text-2xl">👑</span>
                 <div>
-                  <div class="text-[9px] text-amber-300 uppercase font-game tracking-wider">👑 Campeón</div>
-                  <div class="font-heading font-black text-white text-sm sm:text-base">${escapeHTML(winner.name)}</div>
+                  <div class="text-[9px] text-amber-400 uppercase font-bold tracking-wider">Campeón</div>
+                  <div class="font-heading font-extrabold text-white text-sm">@${escapeHTML(winner.name.toLowerCase().replace(/\s+/g, ''))}</div>
                 </div>
-                <div class="text-right border-l border-amber-500/30 pl-3">
-                  <div class="text-xl font-game text-amber-400 tabular-nums">${winner.totalScore}</div>
-                  <div class="text-[9px] text-amber-300/80 font-bold uppercase">puntos</div>
+                <div class="text-right border-l border-amber-500/20 pl-3">
+                  <div class="text-lg font-heading font-black text-amber-400 tabular-nums">${winner.totalScore}</div>
+                  <div class="text-[9px] text-slate-400 font-bold uppercase">puntos</div>
                 </div>
               </div>
             ` : ''}
@@ -1282,32 +1259,32 @@ class App {
               if (isCatan && p.color) {
                 const c = CATAN_CONFIG.colors.find(col => col.id === p.color);
                 const hex = c ? c.hex : '#94a3b8';
-                colorIndicator = `<span class="player-color-dot mr-1.5" style="background-color: ${hex}"></span>`;
+                colorIndicator = `<span class="w-2.5 h-2.5 rounded-full mr-1.5 inline-block" style="background-color: ${hex}"></span>`;
               }
 
               let specialBadges = '';
               if (isCatan) {
                 if (p.longestRoad) {
-                  specialBadges += `<span class="badge-special-token badge-longest-road ml-1" title="Gran Ruta (+2 PV)"><img src="assets/catan_longest_road.jpg" class="w-3.5 h-3.5 rounded-full object-cover">Ruta</span>`;
+                  specialBadges += `<span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">Ruta</span>`;
                 }
                 if (p.largestArmy) {
-                  specialBadges += `<span class="badge-special-token badge-largest-army ml-1" title="Gran Ejército (+2 PV)"><img src="assets/catan_largest_army.jpg" class="w-3.5 h-3.5 rounded-full object-cover">Ejército</span>`;
+                  specialBadges += `<span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-300 border border-red-500/30">Ejército</span>`;
                 }
               }
 
               return `
-                <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${isWin ? 'bg-amber-500/15 border-amber-400/50 shadow-sm' : 'bg-slate-900/60 border-slate-800'}">
+                <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${isWin ? 'bg-amber-500/10 border-amber-500/30 shadow-sm' : 'bg-slate-900/40 border-white/[0.05]'}">
                   <div class="flex items-center gap-2 truncate">
-                    <span class="font-game text-xs ${isWin ? 'text-amber-400' : 'text-slate-500'}">#${idx + 1}</span>
+                    <span class="text-xs font-bold ${isWin ? 'text-amber-400' : 'text-slate-500'}">#${idx + 1}</span>
                     <div class="truncate">
-                      <div class="text-xs font-heading font-black text-slate-200 truncate flex items-center">
+                      <div class="text-xs font-heading font-bold text-slate-200 truncate flex items-center">
                         ${colorIndicator}${escapeHTML(p.name)}
                         ${specialBadges}
                       </div>
                       ${wonderBadge}
                     </div>
                   </div>
-                  <span class="text-sm font-game ${isWin ? 'text-amber-400' : 'text-slate-300'} ml-2 tabular-nums">
+                  <span class="text-sm font-heading font-extrabold ${isWin ? 'text-amber-400' : 'text-slate-300'} ml-2 tabular-nums">
                     ${p.totalScore}<span class="text-[10px] font-normal text-slate-500 ml-0.5">pts</span>
                   </span>
                 </div>
@@ -1315,10 +1292,10 @@ class App {
             }).join('')}
           </div>
 
-          <div class="flex items-center justify-between pt-3 border-t border-slate-800/80 text-xs">
-            <span class="text-slate-400 font-semibold">${sortedPlayers.length} Jugadores en mesa</span>
+          <div class="flex items-center justify-between pt-3 border-t border-white/[0.06] text-xs">
+            <span class="text-slate-400 font-medium">${sortedPlayers.length} Jugadores en mesa</span>
             <div class="flex items-center gap-2">
-              <button type="button" class="btn-game btn-game-tab-inactive btn-view-match-detail px-3.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 text-xs" data-match-id="${match.id}">
+              <button type="button" class="clean-btn clean-btn-secondary btn-view-match-detail px-3 py-1.5 text-xs font-semibold" data-match-id="${match.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -1375,23 +1352,23 @@ class App {
       <div class="mb-8">
         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Elige el Juego</label>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="btn-tactile game-select-card cursor-pointer p-4 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${isCatan ? 'bg-amber-950/40 border-amber-500 shadow-xl shadow-amber-500/10' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'}" data-game="catan">
-            <img src="assets/catan_emblem.jpg" alt="Catán" class="w-16 h-16 rounded-2xl object-cover shadow-lg border border-amber-500/40 flex-shrink-0" onerror="this.onerror=null; this.src='assets/catan_emblem.jpg'">
+          <div class="clean-card game-select-card cursor-pointer p-4 flex items-center gap-4 transition-all duration-200 border ${isCatan ? 'border-amber-500/60 bg-amber-500/10 shadow-lg shadow-amber-500/10' : 'border-white/[0.08] hover:border-white/20'}" data-game="catan">
+            <img src="assets/catan_emblem.jpg" alt="Catán" class="w-14 h-14 rounded-2xl object-cover shadow-md border border-white/10 flex-shrink-0" onerror="this.onerror=null; this.src='assets/catan_emblem.jpg'">
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="font-heading font-black text-white text-base">Los Colonos de Catán</h4>
-                ${isCatan ? '<span class="text-[10px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Activo</span>' : ''}
+                <h4 class="font-heading font-extrabold text-white text-base">Los Colonos de Catán</h4>
+                ${isCatan ? '<span class="text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Activo</span>' : ''}
               </div>
               <p class="text-xs text-slate-400 mt-1">Poblados, ciudades, gran ruta, mayor ejército y cartas de desarrollo.</p>
             </div>
           </div>
 
-          <div class="btn-tactile game-select-card cursor-pointer p-4 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${!isCatan ? 'bg-emerald-950/40 border-emerald-500 shadow-xl shadow-emerald-500/10' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'}" data-game="7wonders">
-            <img src="assets/wonders_emblem.jpg" alt="7 Wonders" class="w-16 h-16 rounded-2xl object-cover shadow-lg border border-emerald-500/40 flex-shrink-0" onerror="this.onerror=null; this.src='assets/wonders_emblem.jpg'">
+          <div class="clean-card game-select-card cursor-pointer p-4 flex items-center gap-4 transition-all duration-200 border ${!isCatan ? 'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10' : 'border-white/[0.08] hover:border-white/20'}" data-game="7wonders">
+            <img src="assets/wonders_emblem.jpg" alt="7 Wonders" class="w-14 h-14 rounded-2xl object-cover shadow-md border border-white/10 flex-shrink-0" onerror="this.onerror=null; this.src='assets/wonders_emblem.jpg'">
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="font-heading font-black text-white text-base">7 Wonders</h4>
-                ${!isCatan ? '<span class="text-[10px] bg-emerald-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Activo</span>' : ''}
+                <h4 class="font-heading font-extrabold text-white text-base">7 Wonders</h4>
+                ${!isCatan ? '<span class="text-[10px] bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Activo</span>' : ''}
               </div>
               <p class="text-xs text-slate-400 mt-1">7 categorías oficiales: Guerra, Oro, Maravilla, Civil, Comercial, Gremios y Ciencia.</p>
             </div>
@@ -1399,30 +1376,30 @@ class App {
         </div>
       </div>
 
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 mb-8">
+      <div class="clean-card p-5 mb-8 border border-white/[0.08]">
         <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
           <span>📋</span> Información General de la Partida
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div>
-            <label class="block text-slate-400 font-semibold mb-1">Título / Nombre de la Partida</label>
-            <input type="text" id="match-title-input" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:ring-2 ${isCatan ? 'focus:ring-amber-500' : 'focus:ring-emerald-500'}" value="${escapeHTML(m.title)}">
+            <label class="block text-slate-400 font-medium mb-1">Título / Nombre de la Partida</label>
+            <input type="text" id="match-title-input" class="w-full bg-[#0B0E17] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none" value="${escapeHTML(m.title)}">
           </div>
           <div>
-            <label class="block text-slate-400 font-semibold mb-1">Fecha</label>
-            <input type="date" id="match-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:ring-2 ${isCatan ? 'focus:ring-amber-500' : 'focus:ring-emerald-500'}" value="${m.date}">
+            <label class="block text-slate-400 font-medium mb-1">Fecha</label>
+            <input type="date" id="match-date-input" class="w-full bg-[#0B0E17] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none" value="${m.date}">
           </div>
           <div>
-            <label class="block text-slate-400 font-semibold mb-1">${isCatan ? 'Expansión / Módulo' : 'Edición / Expansión'}</label>
-            <select id="match-version-select" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:ring-2 ${isCatan ? 'focus:ring-amber-500' : 'focus:ring-emerald-500'}">
+            <label class="block text-slate-400 font-medium mb-1">${isCatan ? 'Expansión / Módulo' : 'Edición / Expansión'}</label>
+            <select id="match-version-select" class="w-full bg-[#0B0E17] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
               ${versionOptions}
             </select>
           </div>
         </div>
 
         <div class="mt-3">
-          <label class="block text-slate-400 font-semibold mb-1 text-xs">Notas de la Partida (Opcional)</label>
-          <input type="text" id="match-notes-input" placeholder="Ej: Estrategia agresiva de puertos, empates resueltos..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 text-xs focus:ring-2 ${isCatan ? 'focus:ring-amber-500' : 'focus:ring-emerald-500'}" value="${escapeHTML(m.notes || '')}">
+          <label class="block text-slate-400 font-medium mb-1 text-xs">Notas de la Partida (Opcional)</label>
+          <input type="text" id="match-notes-input" placeholder="Ej: Estrategia agresiva de puertos, empates resueltos..." class="w-full bg-[#0B0E17] border border-white/[0.1] rounded-xl px-3 py-2 text-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none" value="${escapeHTML(m.notes || '')}">
         </div>
       </div>
 
@@ -1435,7 +1412,7 @@ class App {
             <p class="text-xs text-slate-400">Introduce los nombres y resultados de cada participante.</p>
           </div>
 
-          <button type="button" id="btn-add-player" class="btn-game ${isCatan ? 'btn-game-amber' : 'btn-game-emerald'} inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg">
+          <button type="button" id="btn-add-player" class="clean-btn ${isCatan ? 'clean-btn-gold' : 'clean-btn-primary'} text-xs font-bold shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
             </svg>
@@ -1452,12 +1429,12 @@ class App {
         </div>
       </div>
 
-      <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-800">
-        <button type="button" id="btn-cancel-match" class="btn-game btn-game-tab-inactive px-5 py-2.5 rounded-xl font-bold text-xs transition">
+      <div class="flex items-center justify-end gap-3 pt-6 border-t border-white/[0.08]">
+        <button type="button" id="btn-cancel-match" class="clean-btn clean-btn-secondary px-5 py-2.5 text-xs font-semibold">
           Cancelar
         </button>
 
-        <button type="button" id="btn-save-match" class="btn-game ${isCatan ? 'btn-game-amber' : 'btn-game-emerald'} px-6 py-2.5 rounded-xl font-black text-sm transition shadow-xl flex items-center gap-2">
+        <button type="button" id="btn-save-match" class="clean-btn ${isCatan ? 'clean-btn-gold' : 'clean-btn-primary'} px-6 py-2.5 font-bold text-sm shadow-lg flex items-center gap-2">
           <span>💾</span>
           Guardar y Registrar Partida
         </button>
@@ -1824,22 +1801,19 @@ class App {
       const avatarColor = avatarColors[idx % avatarColors.length];
 
       return `
-        <div class="game-battle-card p-5 shadow-lg relative transition">
-          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-800">
+        <div class="clean-card p-5 relative transition">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.06]">
             <div class="relative flex-shrink-0">
-              <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-game text-white text-lg shadow-md border-3" style="background: linear-gradient(135deg, ${avatarColor}, #0f172a); border-color: ${avatarColor};">
+              <div class="w-11 h-11 rounded-full flex items-center justify-center font-heading font-extrabold text-white text-sm shadow-md" style="background: linear-gradient(135deg, ${avatarColor}, #0F172A); border: 2px solid ${avatarColor};">
                 ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
-              </div>
-              <div class="absolute -bottom-1 -right-1 game-shield-icon" style="background: ${avatarColor};">
-                ★
               </div>
             </div>
             <div class="flex-1 min-w-0">
-              <h4 class="font-heading font-black text-white text-base truncate">${escapeHTML(p.name)}</h4>
+              <h4 class="font-heading font-extrabold text-white text-sm truncate">@${escapeHTML(p.name.toLowerCase().replace(/\s+/g, ''))}</h4>
               <span class="text-xs text-slate-400 tabular-nums">${p.totalGames} partidas registradas</span>
             </div>
             <div class="text-right">
-              <span class="text-xs font-game text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30 tabular-nums">
+              <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 tabular-nums">
                 ${winrate}% WR
               </span>
             </div>
@@ -2133,7 +2107,7 @@ class App {
               ${match.notes ? `<p class="text-xs text-slate-400 italic mt-1">${escapeHTML(match.notes)}</p>` : ''}
             </div>
           </div>
-          <button type="button" class="btn-tactile modal-close-btn p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <button type="button" class="modal-close-btn p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
             ✕
           </button>
         </div>
@@ -2142,7 +2116,7 @@ class App {
         ${tableHTML}
 
         <div class="mt-6 flex justify-end">
-          <button type="button" class="btn-tactile modal-close-btn px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition">
+          <button type="button" class="clean-btn clean-btn-secondary modal-close-btn px-5 py-2.5 text-xs font-bold">
             Cerrar Hoja
           </button>
         </div>

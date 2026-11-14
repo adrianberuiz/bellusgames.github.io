@@ -747,6 +747,78 @@ class App {
       });
     });
 
+    // Menú hamburguesa Mobile
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileDrawer = document.getElementById('mobile-menu-drawer');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (mobileBtn && mobileDrawer) {
+      const toggleMobileMenu = (forceClose = false) => {
+        const isCurrentlyOpen = !mobileDrawer.classList.contains('hidden') && !forceClose;
+        if (isCurrentlyOpen) {
+          mobileDrawer.classList.add('hidden');
+          hamburgerIcon?.classList.remove('hidden');
+          closeIcon?.classList.add('hidden');
+          mobileBtn.setAttribute('aria-expanded', 'false');
+        } else if (!forceClose) {
+          mobileDrawer.classList.remove('hidden');
+          hamburgerIcon?.classList.add('hidden');
+          closeIcon?.classList.remove('hidden');
+          mobileBtn.setAttribute('aria-expanded', 'true');
+        }
+      };
+
+      mobileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMobileMenu();
+      });
+
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tab = e.currentTarget.dataset.tab;
+          this.switchTab(tab);
+          toggleMobileMenu(true);
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!mobileDrawer.contains(e.target) && !mobileBtn.contains(e.target)) {
+          toggleMobileMenu(true);
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggleMobileMenu(true);
+      });
+    }
+
+    // Toggle de Vista en Móvil (Tarjetas vs Tabla)
+    const btnViewCards = document.getElementById('btn-view-cards');
+    const btnViewTable = document.getElementById('btn-view-table');
+    const mobileCards = document.getElementById('leaderboard-mobile-cards');
+    const tableWrapper = document.getElementById('leaderboard-table-wrapper');
+
+    if (btnViewCards && btnViewTable && mobileCards && tableWrapper) {
+      btnViewCards.addEventListener('click', () => {
+        mobileCards.classList.remove('hidden');
+        tableWrapper.classList.add('hidden');
+        tableWrapper.classList.remove('block');
+
+        btnViewCards.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition flex items-center gap-1 active:scale-95';
+        btnViewTable.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1 active:scale-95';
+      });
+
+      btnViewTable.addEventListener('click', () => {
+        mobileCards.classList.add('hidden');
+        tableWrapper.classList.remove('hidden');
+        tableWrapper.classList.add('block');
+
+        btnViewTable.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition flex items-center gap-1 active:scale-95';
+        btnViewCards.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1 active:scale-95';
+      });
+    }
+
     document.querySelectorAll('.game-filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const filter = e.currentTarget.dataset.filter;
@@ -780,6 +852,17 @@ class App {
       } else {
         btn.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'text-white', 'shadow-md', 'shadow-amber-500/20');
         btn.classList.add('text-slate-400');
+      }
+    });
+
+    document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+      const active = btn.dataset.tab === tabName;
+      if (active) {
+        btn.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'text-white', 'shadow-md', 'shadow-amber-500/20');
+        btn.classList.remove('text-slate-300', 'hover:bg-white/[0.06]');
+      } else {
+        btn.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'text-white', 'shadow-md', 'shadow-amber-500/20');
+        btn.classList.add('text-slate-300', 'hover:bg-white/[0.06]');
       }
     });
 
@@ -998,6 +1081,92 @@ class App {
         }).join('');
       }
     }
+
+    // Renderizar Tarjetas Móviles Ultra Optimizadas (Leaderboard Mobile)
+    const mobileCardsContainer = document.getElementById('leaderboard-mobile-cards');
+    if (mobileCardsContainer) {
+      if (playerList.length === 0) {
+        mobileCardsContainer.innerHTML = `
+          <div class="p-8 text-center text-slate-500 text-xs font-medium">Aún no hay partidas registradas en esta categoría.</div>
+        `;
+      } else {
+        const avatarGradients = [
+          'from-amber-500 to-rose-500',
+          'from-sky-500 to-indigo-500',
+          'from-emerald-500 to-teal-500',
+          'from-purple-500 to-pink-500',
+          'from-orange-500 to-amber-500'
+        ];
+
+        mobileCardsContainer.innerHTML = playerList.map((p, idx) => {
+          const rank = idx + 1;
+          const winrate = p.gamesPlayed > 0 ? Math.round((p.wins / p.gamesPlayed) * 100) : 0;
+          const grad = avatarGradients[idx % avatarGradients.length];
+          const avg = p.gamesPlayed > 0 ? (p.totalPoints / p.gamesPlayed).toFixed(1) : 0;
+
+          let placeBadge = '';
+          if (rank === 1) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-amber-500/20 text-amber-300 font-black text-xs border border-amber-500/40">🥇 1</span>`;
+          } else if (rank === 2) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-slate-400/20 text-slate-200 font-black text-xs border border-slate-400/40">🥈 2</span>`;
+          } else if (rank === 3) {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-orange-500/20 text-orange-300 font-black text-xs border border-orange-500/40">🥉 3</span>`;
+          } else {
+            placeBadge = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-slate-800/80 text-slate-400 font-extrabold text-xs border border-white/5">#${rank}</span>`;
+          }
+
+          let titleTag = '';
+          if (p.catanWins > p.sevenWondersWins && p.catanWins > 0) {
+            titleTag = `<span class="text-[10px] text-amber-400 font-semibold">🏝️ Señor de Catán</span>`;
+          } else if (p.sevenWondersWins > p.catanWins && p.sevenWondersWins > 0) {
+            titleTag = `<span class="text-[10px] text-emerald-400 font-semibold">🏛️ Arquitecto</span>`;
+          } else if (p.wins >= 3) {
+            titleTag = `<span class="text-[10px] text-purple-400 font-semibold">👑 Gran Campeón</span>`;
+          }
+
+          return `
+            <div class="clean-card p-3.5 flex flex-col gap-2.5 transition active:scale-[0.99] cursor-pointer" onclick="window.app.switchTab('players')">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  ${placeBadge}
+                  <div class="w-9 h-9 shrink-0 rounded-full bg-gradient-to-tr ${grad} flex items-center justify-center font-bold text-white text-xs shadow-sm">
+                    ${escapeHTML(p.name.substring(0, 2).toUpperCase())}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-heading font-extrabold text-sm text-white truncate">@${escapeHTML(p.name.toLowerCase().replace(/\s+/g, ''))}</div>
+                    ${titleTag}
+                  </div>
+                </div>
+
+                <div class="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full shrink-0">
+                  <span class="text-xs text-amber-400">🪙</span>
+                  <span class="font-heading font-extrabold text-amber-300 text-xs tabular-nums">${p.wins} ${p.wins === 1 ? 'Win' : 'Wins'}</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-4 gap-1.5 pt-1.5 border-t border-white/[0.05] text-center">
+                <div class="bg-[#0B0E17]/60 rounded-xl py-1 px-1">
+                  <span class="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">Partidas</span>
+                  <span class="text-xs font-bold text-slate-300 tabular-nums">${p.gamesPlayed}</span>
+                </div>
+                <div class="bg-[#0B0E17]/60 rounded-xl py-1 px-1">
+                  <span class="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">% Éxito</span>
+                  <span class="text-xs font-bold ${winrate >= 50 ? 'text-emerald-400' : 'text-slate-400'} tabular-nums">${winrate}%</span>
+                </div>
+                <div class="bg-[#0B0E17]/60 rounded-xl py-1 px-1">
+                  <span class="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">Prom.</span>
+                  <span class="text-xs font-bold text-slate-300 tabular-nums">${avg}</span>
+                </div>
+                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl py-1 px-1">
+                  <span class="text-[9px] text-emerald-400 block uppercase font-bold tracking-wider">Récord</span>
+                  <span class="text-xs font-black text-emerald-300 tabular-nums">+${p.highScore}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
   }
 
   renderKPIs(matches, players) {
@@ -1008,6 +1177,12 @@ class App {
 
     if (totalMatchesEl) totalMatchesEl.textContent = matches.length;
     if (totalPlayersEl) totalPlayersEl.textContent = players.length;
+
+    const totalCount = (StorageManager.loadData().matches || []).length;
+    const headerMatchCount = document.getElementById('header-match-count');
+    if (headerMatchCount) headerMatchCount.textContent = `${totalCount} Partidas`;
+    const headerMatchCountMobile = document.getElementById('header-match-count-mobile');
+    if (headerMatchCountMobile) headerMatchCountMobile.textContent = `${totalCount}`;
 
     if (topWinnerEl) {
       if (players.length > 0 && players[0].wins > 0) {

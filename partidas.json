@@ -1,0 +1,258 @@
+{
+  "lastUpdated": "2026-11-14",
+  "version": "1.0",
+  "matches": [
+    {
+      "id": "match-catan-006",
+      "gameType": "catan",
+      "title": "Catán - Partida #6",
+      "date": "2026-11-03",
+      "expansion": "Juego Base",
+      "targetPoints": 10,
+      "notes": "Victoria de Leo alcanzando los 10 puntos de victoria.",
+      "players": [
+        { "name": "Leo", "totalScore": 10, "rank": 1, "isWinner": true, "color": "blue", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 5, "rank": 2, "isWinner": false, "color": "red", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 5, "rank": 3, "isWinner": false, "color": "orange", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 5, "rank": 4, "isWinner": false, "color": "white", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 5, "rank": 5, "isWinner": false, "color": "green", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-005",
+      "gameType": "catan",
+      "title": "Catán - Partida #5",
+      "date": "2026-10-25",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Partida histórica de 6 jugadores: Eduardo gana con 10 pts, seguido de triple empate con 9 pts.",
+      "players": [
+        { "name": "Eduardo", "totalScore": 10, "rank": 1, "isWinner": true, "color": "brown", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 9, "rank": 2, "isWinner": false, "color": "orange", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": true, "vpCards": 0 },
+        { "name": "Gigi", "totalScore": 9, "rank": 3, "isWinner": false, "color": "green", "settlements": 3, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 9, "rank": 4, "isWinner": false, "color": "blue", "settlements": 3, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 8, "rank": 5, "isWinner": false, "color": "red", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 7, "rank": 6, "isWinner": false, "color": "white", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-004",
+      "gameType": "catan",
+      "title": "Catán - Partida #4",
+      "date": "2026-10-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Gran victoria de Noe con 10 puntos en mesa de 6.",
+      "players": [
+        { "name": "Noe", "totalScore": 10, "rank": 1, "isWinner": true, "color": "orange", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": true, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 7, "rank": 2, "isWinner": false, "color": "blue", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 6, "rank": 3, "isWinner": false, "color": "red", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 4, "rank": 4, "isWinner": false, "color": "white", "settlements": 2, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Cristian", "totalScore": 2, "rank": 5, "isWinner": false, "color": "green", "settlements": 2, "cities": 0, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 2, "rank": 6, "isWinner": false, "color": "brown", "settlements": 2, "cities": 0, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-003",
+      "gameType": "catan",
+      "title": "Catán - Partida #3",
+      "date": "2026-10-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Triunfo de Cristian alcanzando la meta de 10 puntos.",
+      "players": [
+        { "name": "Cristian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "green", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 7, "rank": 2, "isWinner": false, "color": "white", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 6, "rank": 3, "isWinner": false, "color": "blue", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 5, "rank": 4, "isWinner": false, "color": "red", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Noe", "totalScore": 5, "rank": 5, "isWinner": false, "color": "orange", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 5, "rank": 6, "isWinner": false, "color": "brown", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-002",
+      "gameType": "catan",
+      "title": "Catán - Partida #2",
+      "date": "2026-09-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Segunda victoria consecutiva de Adrian en la ampliación de 6 jugadores.",
+      "players": [
+        { "name": "Adrian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "red", "settlements": 3, "cities": 2, "longestRoad": true, "largestArmy": false, "vpCards": 1 },
+        { "name": "Leo", "totalScore": 7, "rank": 2, "isWinner": false, "color": "blue", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Noe", "totalScore": 7, "rank": 3, "isWinner": false, "color": "orange", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 6, "rank": 4, "isWinner": false, "color": "green", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Cristian", "totalScore": 5, "rank": 5, "isWinner": false, "color": "brown", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Mar", "totalScore": 4, "rank": 6, "isWinner": false, "color": "white", "settlements": 2, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-001",
+      "gameType": "catan",
+      "title": "Catán - Partida #1",
+      "date": "2026-09-06",
+      "expansion": "Juego Base",
+      "targetPoints": 10,
+      "notes": "Partida inaugural de Catán con victoria para Adrian.",
+      "players": [
+        { "name": "Adrian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "red", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 8, "rank": 2, "isWinner": false, "color": "blue", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 8, "rank": 3, "isWinner": false, "color": "white", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 6, "rank": 4, "isWinner": false, "color": "orange", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Gigi", "totalScore": 5, "rank": 5, "isWinner": false, "color": "green", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-7w-010",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #10",
+      "date": "2026-10-11",
+      "edition": "Segunda Edición",
+      "notes": "Mesa de 7 jugadores. Leo gana con 67 puntos.",
+      "players": [
+        { "name": "Leo", "totalScore": 67, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Cristian", "totalScore": 61, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 59, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 55, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Efrain", "totalScore": 54, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 52, "rank": 6, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 50, "rank": 7, "isWinner": false, "wonder": "giza", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-009",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #9",
+      "date": "2026-09-05",
+      "edition": "Segunda Edición",
+      "notes": "Duelo reñido entre Leo (65) y Adrian (63).",
+      "players": [
+        { "name": "Leo", "totalScore": 65, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 63, "rank": 2, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Dani", "totalScore": 48, "rank": 3, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 48, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-008",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #8",
+      "date": "2026-08-23",
+      "edition": "Segunda Edición",
+      "notes": "Gran marca de Leo alcanzando 69 puntos.",
+      "players": [
+        { "name": "Leo", "totalScore": 69, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 55, "rank": 2, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 54, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 51, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-007",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #7",
+      "date": "2026-08-08",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 08/08/2026 con victoria de Leo (62 pts).",
+      "players": [
+        { "name": "Leo", "totalScore": 62, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 54, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 53, "rank": 3, "isWinner": false, "wonder": "giza", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 46, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 45, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-006",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #6",
+      "date": "2026-08-08",
+      "edition": "Segunda Edición",
+      "notes": "Primera partida del 08/08/2026 con triunfo de Adrian (66 pts).",
+      "players": [
+        { "name": "Adrian", "totalScore": 66, "rank": 1, "isWinner": true, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 62, "rank": 2, "isWinner": false, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 61, "rank": 3, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 43, "rank": 4, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 36, "rank": 5, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-005",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #5",
+      "date": "2026-07-19",
+      "edition": "Segunda Edición",
+      "notes": "Puntuación récord histórica: Adrian anota 81 puntos en partida de 7 jugadores.",
+      "players": [
+        { "name": "Adrian", "totalScore": 81, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 62, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Noe", "totalScore": 61, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Chiche", "totalScore": 52, "rank": 4, "isWinner": false, "wonder": "giza", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 51, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 50, "rank": 6, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 43, "rank": 7, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-004",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #4",
+      "date": "2026-07-04",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 04/07/2026 con victoria de Leo.",
+      "players": [
+        { "name": "Leo", "totalScore": 64, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 52, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 46, "rank": 3, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 37, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-003",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #3",
+      "date": "2026-07-04",
+      "edition": "Segunda Edición",
+      "notes": "Victoria para Gigi con 63 puntos.",
+      "players": [
+        { "name": "Gigi", "totalScore": 63, "rank": 1, "isWinner": true, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 55, "rank": 2, "isWinner": false, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 50, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Dani", "totalScore": 45, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 45, "rank": 5, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-002",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #2",
+      "date": "2026-06-07",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 07/06/2026 con triunfo de Adrian (75 pts).",
+      "players": [
+        { "name": "Adrian", "totalScore": 75, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 56, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Leo", "totalScore": 49, "rank": 3, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Noe", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 42, "rank": 5, "isWinner": false, "wonder": "babylon", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-001",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #1",
+      "date": "2026-06-07",
+      "edition": "Segunda Edición",
+      "notes": "Partida inaugural de 7 Wonders con triunfo de Leo (62 pts).",
+      "players": [
+        { "name": "Leo", "totalScore": 62, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 51, "rank": 2, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 45, "rank": 3, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Noe", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 42, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,652 @@
+﻿<!DOCTYPE html>
+<html lang="es" class="dark" data-type="software">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-type" content="software">
+  <meta name="site-kind" content="gaming">
+  <title>LudoRank • Salón de Honor de Catán & 7 Wonders</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            game: ['"Lilita One"', 'cursive', 'sans-serif'],
+            heading: ['"Fredoka"', '-apple-system', 'sans-serif'],
+            body: ['"Outfit"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            catan: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            },
+            wonders: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Lilita One (Arcade 3D), Fredoka (Juego Casual), Outfit (Lectura clara) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Lilita+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti CDN para celebraciones de victoria -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Estilos personalizados inspirados en Emil Kowalski (Design Engineering) -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ===================================================================== -->
+  <!-- NAVBAR PRINCIPAL CON IDENTIDAD DE JUEGO DE MESA                        -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Marca Lúdica -->
+        <div class="flex items-center gap-3">
+          <div class="relative group cursor-pointer" onclick="window.app.switchTab('leaderboard')">
+            <img src="assets/catan_emblem.jpg" alt="LudoRank Emblem" class="w-10 h-10 rounded-xl object-cover ring-2 ring-amber-500/40 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition duration-200" onerror="this.onerror=null; this.src='assets/catan_emblem.jpg'">
+            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center text-[8px] font-black text-slate-950">✓</span>
+          </div>
+          <div>
+            <h1 class="font-game text-2xl tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent flex items-center gap-2 drop-shadow">
+              <span>Bellus Games</span>
+              <span class="text-[9px] font-heading font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full uppercase tracking-widest">Vault</span>
+            </h1>
+            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Salón de Honor • Catán & 7 Wonders</p>
+          </div>
+        </div>
+
+        <!-- Navegación de Vistas con Micro-Interacciones Físicas -->
+        <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800/90 overflow-x-auto max-w-[calc(100vw-110px)] sm:max-w-none">
+          <button type="button" class="btn-game btn-game-amber nav-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shadow-md" data-tab="leaderboard">
+            <img src="assets/medal_gold.jpg" alt="Clasificaciones" class="w-4 h-4 rounded-full object-cover">
+            <span>Clasificaciones</span>
+          </button>
+          <button type="button" class="btn-game btn-game-tab-inactive nav-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap" data-tab="matches">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Partidas</span>
+          </button>
+          <button type="button" class="btn-game btn-game-emerald nav-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap" data-tab="new-match">
+            <span class="text-white font-black text-sm leading-none">+</span>
+            <span>Nueva Partida</span>
+          </button>
+          <button type="button" class="btn-game btn-game-tab-inactive nav-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap" data-tab="players">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span class="hidden md:inline">Jugadores</span>
+          </button>
+          <button type="button" class="btn-game btn-game-tab-inactive nav-tab-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap" data-tab="settings" title="Copia de Seguridad y Configuración">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- CONTENIDO PRINCIPAL                                                   -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================= -->
+    <!-- VISTA 1: CLASIFICACIONES (PANTALLA PRINCIPAL)                      -->
+    <!-- ================================================================= -->
+    <section id="view-leaderboard" class="tab-view space-y-6">
+      
+      <!-- Encabezado de Videojuego: 3D Titular & Folded Ribbon (Image 1) -->
+      <div class="text-center pt-2 pb-1">
+        <h2 class="game-title-3d text-4xl sm:text-5xl md:text-6xl tracking-wider">
+          LEADERBOARD
+        </h2>
+        <div class="mt-2 mb-4 flex justify-center">
+          <div class="game-ribbon text-xs sm:text-sm uppercase font-bold tracking-wider">
+            👑 Salón de Campeones • Catán & 7 Wonders
+          </div>
+        </div>
+
+        <!-- Segmentación por tipo de juego: Botones Arcade 3D (Image 1 "Weekly / Friends / Players") -->
+        <div class="inline-flex rounded-2xl bg-slate-900/90 p-1.5 border-2 border-slate-700 shadow-xl gap-1.5 flex-wrap justify-center">
+          <button type="button" class="btn-game btn-game-amber game-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md" data-filter="all">
+            👑 Todos los Reinos
+          </button>
+          <button type="button" class="btn-game btn-game-tab-inactive game-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5" data-filter="catan">
+            <img src="assets/catan_emblem.jpg" alt="Catán" class="w-4 h-4 rounded-full object-cover">
+            <span>Isla de Catán</span>
+          </button>
+          <button type="button" class="btn-game btn-game-tab-inactive game-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5" data-filter="7wonders">
+            <img src="assets/wonders_emblem.jpg" alt="7 Wonders" class="w-4 h-4 rounded-full object-cover">
+            <span>7 Wonders</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjetas KPI con diseño físico estilo Arcade / Casual Game -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto">
+        <!-- Partidas Jugadas -->
+        <div class="game-card p-3 sm:p-4 text-center">
+          <span class="text-[10px] sm:text-[11px] font-game text-amber-300 uppercase tracking-wider block mb-0.5">Partidas Jugadas</span>
+          <div class="flex items-baseline justify-center gap-1.5">
+            <span id="kpi-total-matches" class="text-2xl sm:text-3xl font-game text-white tabular-nums">0</span>
+            <span class="text-[10px] text-slate-400 font-bold">totales</span>
+          </div>
+        </div>
+
+        <!-- Jugadores Registrados -->
+        <div class="game-card p-3 sm:p-4 text-center">
+          <span class="text-[10px] sm:text-[11px] font-game text-sky-300 uppercase tracking-wider block mb-0.5">Jugadores</span>
+          <div class="flex items-baseline justify-center gap-1.5">
+            <span id="kpi-total-players" class="text-2xl sm:text-3xl font-game text-sky-400 tabular-nums">0</span>
+            <span class="text-[10px] text-slate-400 font-bold">activos</span>
+          </div>
+        </div>
+
+        <!-- Campeón Actual -->
+        <div class="game-card p-3 sm:p-4 text-center">
+          <span class="text-[10px] sm:text-[11px] font-game text-emerald-300 uppercase tracking-wider block mb-0.5">Más Victorias</span>
+          <div class="text-sm sm:text-base font-game text-emerald-400 truncate" id="kpi-top-winner">—</div>
+          <span class="text-[9px] text-slate-400 font-bold">Líder del Reino</span>
+        </div>
+
+        <!-- Puntuación Récord -->
+        <div class="game-card p-3 sm:p-4 text-center">
+          <span class="text-[10px] sm:text-[11px] font-game text-fuchsia-300 uppercase tracking-wider block mb-0.5">Récord en Partida</span>
+          <div class="text-sm sm:text-base font-game text-fuchsia-400 truncate" id="kpi-max-score">—</div>
+          <span class="text-[9px] text-slate-400 font-bold">Puntuación máx.</span>
+        </div>
+      </div>
+
+      <!-- Podio de Videojuego Top 3 (Inspirado en Imagen 1: Cofre dorado, medallas y pins) -->
+      <div id="podium-container" class="my-4">
+        <!-- Renderizado dinámicamente en app.js con estructura de 3 cartas de podio -->
+      </div>
+
+      <!-- Roster de Jugadores (Posiciones 4 en adelante - Estilo Imagen 1) -->
+      <div class="max-w-3xl mx-auto space-y-3">
+        <div class="flex items-center justify-between px-2 pt-2">
+          <span class="text-xs font-game text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🛡️</span> Rango de Jugadores en Competencia
+          </span>
+          <span class="text-[11px] text-slate-400 font-medium">Clasificados por Victorias & WR</span>
+        </div>
+
+        <div id="leaderboard-roster-container" class="space-y-3">
+          <!-- Renderizado dinámicamente en app.js como game-roster-card de Imagen 1 -->
+        </div>
+      </div>
+
+      <!-- Acordeón / Desplegable para Análisis Estadístico Detallado -->
+      <details class="max-w-4xl mx-auto game-card overflow-hidden group">
+        <summary class="p-4 cursor-pointer font-game text-sm text-amber-300 hover:text-amber-200 flex items-center justify-between transition list-none">
+          <span class="flex items-center gap-2">
+            <span>📊</span> Ver Registro Estadístico Detallado (Hoja de Cálculo)
+          </span>
+          <span class="text-xs text-slate-400 group-open:rotate-180 transition-transform duration-200">▼</span>
+        </summary>
+        <div class="overflow-x-auto border-t border-slate-800 p-2">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-950/70 text-slate-400 uppercase text-[11px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th scope="col" class="py-3.5 px-4 text-center w-14">Pos</th>
+                <th scope="col" class="py-3.5 px-4">Jugador</th>
+                <th scope="col" class="py-3.5 px-4 text-center">Partidas</th>
+                <th scope="col" class="py-3.5 px-4 text-center">Victorias</th>
+                <th scope="col" class="py-3.5 px-4 text-center">Efectividad (%WR)</th>
+                <th scope="col" class="py-3.5 px-4 text-center">Promedio Pts</th>
+                <th scope="col" class="py-3.5 px-4 text-center">Récord Pts</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-table-body" class="divide-y divide-slate-800/60 font-body">
+              <!-- Renderizado dinámicamente en app.js -->
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 2: HISTORIAL DE PARTIDAS                                    -->
+    <!-- ================================================================= -->
+    <section id="view-matches" class="tab-view hidden space-y-6">
+      
+      <!-- Controles de Filtro y Búsqueda -->
+      <div class="bg-slate-900/70 p-4 sm:p-5 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="font-heading font-black text-xl text-white flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>Crónica de Partidas Registradas</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Hojas de puntuación oficiales y fichas de logro por partida.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Buscador -->
+          <div class="relative flex-1 md:w-64">
+            <input type="text" id="matches-search-input" placeholder="Buscar jugador o partida..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <span class="absolute left-3 top-2.5 text-slate-500 text-xs">🔍</span>
+          </div>
+
+          <!-- Botón rápido para ir a Nueva Partida -->
+          <button type="button" class="btn-tactile px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20" onclick="window.app.switchTab('new-match')">
+            <span>+</span> Nueva Partida
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor de Tarjetas de Partidas -->
+      <div id="matches-list-container" class="space-y-4">
+        <!-- Renderizado dinámicamente en app.js con emblemas y badges -->
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 3: NUEVA PARTIDA (FORMULARIO ADAPTADO POR JUEGO)             -->
+    <!-- ================================================================= -->
+    <section id="view-new-match" class="tab-view hidden">
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-6">
+          <h2 class="font-heading font-black text-2xl text-white flex items-center gap-2">
+            <span>⚔️</span> Registrar Nueva Partida
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Selecciona el juego, añade a los participantes e ingresa sus resultados. El cálculo de puntuaciones y el ganador se determinan automáticamente.
+          </p>
+        </div>
+
+        <!-- Formulario Dinámico -->
+        <div id="new-match-form-container">
+          <!-- Renderizado dinámicamente según juego seleccionado -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 4: PERFILES DE JUGADORES                                    -->
+    <!-- ================================================================= -->
+    <section id="view-players" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/70 p-4 sm:p-5 rounded-3xl border border-slate-800">
+        <h2 class="font-heading font-black text-xl text-white flex items-center gap-2">
+          <span>👥</span> Perfiles de Jugadores
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Estadísticas acumuladas individuales en Catán y 7 Wonders.</p>
+      </div>
+
+      <div id="players-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Renderizado dinámicamente en app.js -->
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 5: CONFIGURACIÓN Y RESPALDO DE DATOS                        -->
+    <!-- ================================================================= -->
+    <section id="view-settings" class="tab-view hidden space-y-6">
+      <div class="max-w-2xl mx-auto space-y-6">
+        <div class="bg-slate-900/70 p-5 rounded-3xl border border-slate-800">
+          <h2 class="font-heading font-black text-xl text-white flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>Respaldo y Gestión de Archivo JSON</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Los datos se sincronizan con el archivo <strong class="text-amber-400">partidas.json</strong> y la memoria local del navegador. Puedes exportar copias cuando desees.
+          </p>
+        </div>
+
+        <!-- Tarjeta de Exportar / Importar -->
+        <div class="game-card p-6 shadow-xl space-y-4">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <span>💾</span> Copias de Seguridad (JSON)
+          </h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <!-- Exportar -->
+            <div class="bg-slate-800/40 p-4 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">Exportar Registro</h4>
+                <p class="text-xs text-slate-400 mb-4">Descarga un archivo JSON actualizado con todas las partidas registradas.</p>
+              </div>
+              <button type="button" id="btn-export-json" class="btn-game btn-game-amber w-full py-2.5 rounded-xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
+                <span>⬇️</span> Descargar Backup JSON
+              </button>
+            </div>
+
+            <!-- Importar -->
+            <div class="bg-slate-800/40 p-4 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">Restaurar Copia</h4>
+                <p class="text-xs text-slate-400 mb-4">Carga un archivo JSON previo para restaurar o combinar partidas registradas.</p>
+              </div>
+              <label class="btn-game btn-game-blue w-full py-2.5 rounded-xl text-xs font-bold transition cursor-pointer text-center flex items-center justify-center gap-1.5">
+                <span>⬆️</span> Seleccionar Archivo
+                <input type="file" id="input-import-json" accept=".json" class="hidden">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Acciones de Emergencia / Restablecimiento -->
+        <div class="game-card p-6 shadow-xl space-y-4">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <span>🔄</span> Acciones de Datos
+          </h3>
+
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button type="button" id="btn-reset-demo" class="btn-game btn-game-tab-inactive flex-1 py-2.5 px-4 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+              <span>📊</span> Restablecer a Partidas de Excel (16)
+            </button>
+            <button type="button" id="btn-clear-all" class="btn-game py-2.5 px-4 bg-red-900 border-2 border-red-500 text-white font-bold rounded-xl text-xs transition">
+              🗑️ Vaciar Registro
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL DE DETALLE COMPLETO DE PARTIDA                                  -->
+  <!-- ===================================================================== -->
+  <div id="detail-modal-backdrop" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 hidden modal-overlay">
+    <div id="detail-modal-content" class="game-modal-box max-w-3xl w-full max-h-[90vh] overflow-y-auto relative modal-dialog">
+      <!-- Contenido renderizado en app.js -->
+    </div>
+  </div>
+
+  <!-- Datalist para autocompletar nombres de jugadores -->
+  <datalist id="known-players-list"></datalist>
+
+  <!-- ===================================================================== -->
+  <!-- FUENTE DE DATOS OFICIAL EN FORMATO JSON (partidas.json)                 -->
+  <!-- ===================================================================== -->
+  <script id="default-partidas-json" type="application/json">
+{
+  "lastUpdated": "2026-11-14",
+  "version": "1.0",
+  "matches": [
+    {
+      "id": "match-catan-006",
+      "gameType": "catan",
+      "title": "Catán - Partida #6",
+      "date": "2026-11-03",
+      "expansion": "Juego Base",
+      "targetPoints": 10,
+      "notes": "Victoria de Leo alcanzando los 10 puntos de victoria.",
+      "players": [
+        { "name": "Leo", "totalScore": 10, "rank": 1, "isWinner": true, "color": "blue", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 5, "rank": 2, "isWinner": false, "color": "red", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 5, "rank": 3, "isWinner": false, "color": "orange", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 5, "rank": 4, "isWinner": false, "color": "white", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 5, "rank": 5, "isWinner": false, "color": "green", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-005",
+      "gameType": "catan",
+      "title": "Catán - Partida #5",
+      "date": "2026-10-25",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Partida histórica de 6 jugadores: Eduardo gana con 10 pts, seguido de triple empate con 9 pts.",
+      "players": [
+        { "name": "Eduardo", "totalScore": 10, "rank": 1, "isWinner": true, "color": "brown", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 9, "rank": 2, "isWinner": false, "color": "orange", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": true, "vpCards": 0 },
+        { "name": "Gigi", "totalScore": 9, "rank": 3, "isWinner": false, "color": "green", "settlements": 3, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 9, "rank": 4, "isWinner": false, "color": "blue", "settlements": 3, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 8, "rank": 5, "isWinner": false, "color": "red", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 7, "rank": 6, "isWinner": false, "color": "white", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-004",
+      "gameType": "catan",
+      "title": "Catán - Partida #4",
+      "date": "2026-10-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Gran victoria de Noe con 10 puntos en mesa de 6.",
+      "players": [
+        { "name": "Noe", "totalScore": 10, "rank": 1, "isWinner": true, "color": "orange", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": true, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 7, "rank": 2, "isWinner": false, "color": "blue", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 6, "rank": 3, "isWinner": false, "color": "red", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 4, "rank": 4, "isWinner": false, "color": "white", "settlements": 2, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Cristian", "totalScore": 2, "rank": 5, "isWinner": false, "color": "green", "settlements": 2, "cities": 0, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 2, "rank": 6, "isWinner": false, "color": "brown", "settlements": 2, "cities": 0, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-003",
+      "gameType": "catan",
+      "title": "Catán - Partida #3",
+      "date": "2026-10-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Triunfo de Cristian alcanzando la meta de 10 puntos.",
+      "players": [
+        { "name": "Cristian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "green", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 7, "rank": 2, "isWinner": false, "color": "white", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 6, "rank": 3, "isWinner": false, "color": "blue", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Adrian", "totalScore": 5, "rank": 4, "isWinner": false, "color": "red", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Noe", "totalScore": 5, "rank": 5, "isWinner": false, "color": "orange", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Efrain", "totalScore": 5, "rank": 6, "isWinner": false, "color": "brown", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-002",
+      "gameType": "catan",
+      "title": "Catán - Partida #2",
+      "date": "2026-09-11",
+      "expansion": "Ampliación 5-6 Jugadores",
+      "targetPoints": 10,
+      "notes": "Segunda victoria consecutiva de Adrian en la ampliación de 6 jugadores.",
+      "players": [
+        { "name": "Adrian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "red", "settlements": 3, "cities": 2, "longestRoad": true, "largestArmy": false, "vpCards": 1 },
+        { "name": "Leo", "totalScore": 7, "rank": 2, "isWinner": false, "color": "blue", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Noe", "totalScore": 7, "rank": 3, "isWinner": false, "color": "orange", "settlements": 3, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 6, "rank": 4, "isWinner": false, "color": "green", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Cristian", "totalScore": 5, "rank": 5, "isWinner": false, "color": "brown", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Mar", "totalScore": 4, "rank": 6, "isWinner": false, "color": "white", "settlements": 2, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-catan-001",
+      "gameType": "catan",
+      "title": "Catán - Partida #1",
+      "date": "2026-09-06",
+      "expansion": "Juego Base",
+      "targetPoints": 10,
+      "notes": "Partida inaugural de Catán con victoria para Adrian.",
+      "players": [
+        { "name": "Adrian", "totalScore": 10, "rank": 1, "isWinner": true, "color": "red", "settlements": 2, "cities": 3, "longestRoad": true, "largestArmy": false, "vpCards": 0 },
+        { "name": "Leo", "totalScore": 8, "rank": 2, "isWinner": false, "color": "blue", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Nela", "totalScore": 8, "rank": 3, "isWinner": false, "color": "white", "settlements": 2, "cities": 3, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Dani", "totalScore": 6, "rank": 4, "isWinner": false, "color": "orange", "settlements": 2, "cities": 2, "longestRoad": false, "largestArmy": false, "vpCards": 0 },
+        { "name": "Gigi", "totalScore": 5, "rank": 5, "isWinner": false, "color": "green", "settlements": 3, "cities": 1, "longestRoad": false, "largestArmy": false, "vpCards": 0 }
+      ]
+    },
+    {
+      "id": "match-7w-010",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #10",
+      "date": "2026-10-11",
+      "edition": "Segunda Edición",
+      "notes": "Mesa de 7 jugadores. Leo gana con 67 puntos.",
+      "players": [
+        { "name": "Leo", "totalScore": 67, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Cristian", "totalScore": 61, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 59, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 55, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Efrain", "totalScore": 54, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 52, "rank": 6, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 50, "rank": 7, "isWinner": false, "wonder": "giza", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-009",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #9",
+      "date": "2026-09-05",
+      "edition": "Segunda Edición",
+      "notes": "Duelo reñido entre Leo (65) y Adrian (63).",
+      "players": [
+        { "name": "Leo", "totalScore": 65, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 63, "rank": 2, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Dani", "totalScore": 48, "rank": 3, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 48, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-008",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #8",
+      "date": "2026-08-23",
+      "edition": "Segunda Edición",
+      "notes": "Gran marca de Leo alcanzando 69 puntos.",
+      "players": [
+        { "name": "Leo", "totalScore": 69, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 55, "rank": 2, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 54, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 51, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-007",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #7",
+      "date": "2026-08-08",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 08/08/2026 con victoria de Leo (62 pts).",
+      "players": [
+        { "name": "Leo", "totalScore": 62, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 54, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Nela", "totalScore": 53, "rank": 3, "isWinner": false, "wonder": "giza", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 46, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 45, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-006",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #6",
+      "date": "2026-08-08",
+      "edition": "Segunda Edición",
+      "notes": "Primera partida del 08/08/2026 con triunfo de Adrian (66 pts).",
+      "players": [
+        { "name": "Adrian", "totalScore": 66, "rank": 1, "isWinner": true, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 62, "rank": 2, "isWinner": false, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 61, "rank": 3, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 43, "rank": 4, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 36, "rank": 5, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-005",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #5",
+      "date": "2026-07-19",
+      "edition": "Segunda Edición",
+      "notes": "Puntuación récord histórica: Adrian anota 81 puntos en partida de 7 jugadores.",
+      "players": [
+        { "name": "Adrian", "totalScore": 81, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 62, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Noe", "totalScore": 61, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Chiche", "totalScore": 52, "rank": 4, "isWinner": false, "wonder": "giza", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 51, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 50, "rank": 6, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 43, "rank": 7, "isWinner": false, "wonder": "halikarnassos", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-004",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #4",
+      "date": "2026-07-04",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 04/07/2026 con victoria de Leo.",
+      "players": [
+        { "name": "Leo", "totalScore": 64, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Gigi", "totalScore": 52, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 46, "rank": 3, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 37, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-003",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #3",
+      "date": "2026-07-04",
+      "edition": "Segunda Edición",
+      "notes": "Victoria para Gigi con 63 puntos.",
+      "players": [
+        { "name": "Gigi", "totalScore": 63, "rank": 1, "isWinner": true, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Leo", "totalScore": 55, "rank": 2, "isWinner": false, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 50, "rank": 3, "isWinner": false, "wonder": "babylon", "wonderSide": "B" },
+        { "name": "Dani", "totalScore": 45, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 45, "rank": 5, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-002",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #2",
+      "date": "2026-06-07",
+      "edition": "Segunda Edición",
+      "notes": "Segunda partida del 07/06/2026 con triunfo de Adrian (75 pts).",
+      "players": [
+        { "name": "Adrian", "totalScore": 75, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 56, "rank": 2, "isWinner": false, "wonder": "alexandria", "wonderSide": "B" },
+        { "name": "Leo", "totalScore": 49, "rank": 3, "isWinner": false, "wonder": "olympia", "wonderSide": "A" },
+        { "name": "Noe", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 42, "rank": 5, "isWinner": false, "wonder": "babylon", "wonderSide": "A" }
+      ]
+    },
+    {
+      "id": "match-7w-001",
+      "gameType": "7wonders",
+      "title": "7 Wonders - Partida #1",
+      "date": "2026-06-07",
+      "edition": "Segunda Edición",
+      "notes": "Partida inaugural de 7 Wonders con triunfo de Leo (62 pts).",
+      "players": [
+        { "name": "Leo", "totalScore": 62, "rank": 1, "isWinner": true, "wonder": "rhodes", "wonderSide": "A" },
+        { "name": "Adrian", "totalScore": 51, "rank": 2, "isWinner": false, "wonder": "babylon", "wonderSide": "A" },
+        { "name": "Dani", "totalScore": 45, "rank": 3, "isWinner": false, "wonder": "alexandria", "wonderSide": "A" },
+        { "name": "Noe", "totalScore": 44, "rank": 4, "isWinner": false, "wonder": "ephesos", "wonderSide": "A" },
+        { "name": "Nela", "totalScore": 42, "rank": 5, "isWinner": false, "wonder": "olympia", "wonderSide": "A" }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <!-- Script principal autónomo de la aplicación -->
+  <script src="js/app.js"></script>
+</body>
+</html>
